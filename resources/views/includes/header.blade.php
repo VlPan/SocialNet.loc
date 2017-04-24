@@ -10,7 +10,7 @@
             </button>
             <a class="navbar-brand" href="{{ route('dashboard') }}">Brand</a>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ route('account') }}">Account</a></li>
+                <li><a href="{{ route('account') }}">Настройки <i class="fa fa-cog" aria-hidden="true"></i></a></li>
                 <li><a href="{{ route('logout') }}">Выйти</a></li>
             </ul>
         </div>

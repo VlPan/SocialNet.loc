@@ -2,34 +2,50 @@
 
 @section('content')
     @include('includes.message-block')
+
+    <head>
+        <link rel="stylesheet" href="{{asset('css/dashboard.css')}}">
+    </head>
+
+
     <section class="row new-post">
-        <div class="col-md-6 col-md-offset-3">
-            <header><h3>What do you have to say?</h3></header>
+        <div class="col-md-1">
+            <div class="user_img">
+                <img src="{{ route('account.image', ['filename' => $user->first_name . '-' . $user->id . '.jpg']) }}" alt="" class="img-responsive">
+                <h3>{{$user->first_name}}</h3>
+            </div>
+        </div>
+        <div class="col-md-6 col-md-offset-2">
+            <header><h3>О чем вы думаете?</h3></header>
             <form action="{{ route('post.create') }}" method="post">
                <div class="form-group">
-                   <textarea class="form-control" name="body" id="new-post" cols="30"                       rows="5" placeholder="Your Post will be here"></textarea>
+                   <textarea class="form-control" name="body" id="new-post" cols="30"                       rows="5" placeholder="Разместите здесь ваш пост"></textarea>
                </div>
-                <button class="btn btn-primary">Create Post</button>
+                <button class="btn btn-primary">Опубликовать</button>
                 {{ csrf_field() }}
             </form>
         </div>
     </section>
 
 
+
+
     <section class="row posts">
         <div class="col-md-6 col-md-offset-3">
-            <header><h3>Whatever people say</h3></header>
+            <header><h3>Последние Посты пользователей:</h3></header>
             @foreach($posts as $post)
-                <article class="post" data-postid="{{ $post->id }}">
+
+               <span class="likes_number"></span> {{$post->likes}}   <i class="fa fa-heart" aria-hidden="true"></i>
+                <span class="dislikes_number"></span>{{$post->dislikes}}    <i class="fa fa-thumbs-down" aria-hidden="true"></i><article class="post" data-postid="{{ $post->id }}">
                     <p>
                        {{$post->body}}
                     </p>
                     <div class="info">
-                        Posted by {{$post->user->first_name}} on {{ $post->created_at }}
+                        Опубликовано {{$post->user->first_name}} , дата: {{ $post->created_at }}
                     </div>
                     <div class="interaction">
-                        <a href="#" class="like">{{ Auth::user()->likes() -> where('post_id',$post->id)->first() ? Auth::user()->likes() -> where('post_id',$post->id)->first()->like == 1 ? 'You liked it' : 'Like' : 'Like'}}</a> |
-                        <a href="#" class="like">{{ Auth::user()->likes() -> where('post_id',$post->id)->first() ? Auth::user()->likes() -> where('post_id',$post->id)->first()->like == 0 ? 'You don\'t like it' : 'Dislike' : 'Dislike'}}</a>
+                        <a href="#" class="like">{{ Auth::user()->likes() -> where('post_id',$post->id)->first() ? Auth::user()->likes() -> where('post_id',$post->id)->first()->like == 1 ? 'You liked it' : 'Like' : 'Like'}}</a>
+                         <a href="#" class="like">{{ Auth::user()->likes() -> where('post_id',$post->id)->first() ? Auth::user()->likes() -> where('post_id',$post->id)->first()->like == 0 ? 'You don\'t like it' : 'Dislike' : 'Dislike'}}</a>
 
                         @if(Auth::user() == $post->user)
                             |
