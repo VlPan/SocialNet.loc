@@ -1,0 +1,77 @@
+body {
+    background-color: #edeef0;
+
+}
+
+html {
+    height: 100%;
+}
+
+h1.title {
+    text-align: center;
+    font-size: 44px;
+    color: #f70451;
+}
+
+p.title {
+    text-align: center;
+    font-size: 24px;
+    color: #f70451;
+}
+
+.inputs {
+    margin-top: 40px;
+
+}
+
+.block {
+    background-color: white;
+    padding: 40px;
+    border: 2px solid #e3e4e8;
+
+
+}
+
+.panell {
+    margin-top: 40px;
+
+}
+
+.colorful  {
+    height: 200px;
+    border-bottom: 1px solid;
+    font-size: 20px;
+    font-weight: 700;
+    width: 450px;
+    margin-top:2px;
+    border-bottom: 2px solid #000000;
+}
+
+.colorful + p{
+    font-size: 20px;
+}
+
+.colorful:hover {
+   cursor: pointer;
+}
+
+.colorful img {
+    width:inherit;
+    height: inherit;
+
+}
+
+footer {
+    color: #f70451;
+    border-top: 2px solid #e3e4e8;
+}
+
+.fa-address-book{
+    font-size: 25px;
+}
+
+
+
+
+
+
