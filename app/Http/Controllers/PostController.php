@@ -19,10 +19,12 @@ class PostController extends Controller
         $users = User::all();
         $likes = 0;
         $dislikes = 0;
-        foreach ($posts as $post){
-            foreach ($users as $user){
-                $likes += $user->likes() -> where('post_id',$post->id)-> where('user_id', $user->id)-> where('like',1) -> count();
-                $dislikes += $user->likes() -> where('post_id',$post->id)-> where('like',0)                  -> count();
+        $isLike = false;
+        $isDislike = false;
+        foreach ($posts as $post) {
+            foreach ($users as $user_loop) {
+                $likes += $user_loop->likes()->where('post_id', $post->id)->where('user_id', $user_loop->id)->where('like', 1)->count();
+                $dislikes += $user_loop->likes()->where('post_id', $post->id)->where('like', 0)->count();
             }
             $post->likes = $likes;
             $post->dislikes = $dislikes;
@@ -30,16 +32,15 @@ class PostController extends Controller
             $dislikes = 0;
         }
 
-        return view('dashboard', ['posts' => $posts,'user'=>$user,'users'=>$users,'likes'=>$likes,'dislikes'=>$dislikes]);
+        return view('dashboard', ['posts' => $posts, 'user' => $user, 'users' => $users, 'likes' => $likes, 'dislikes' => $dislikes, 'isLike' => $isLike, 'isDislike' => $isDislike]);
     }
-
 
 
     public function postCreatePost(Request $request)
     {
         //TO-DO: Validation
         $this->validate($request, [
-            'body' => 'required|max:1000'
+            'body' => 'required|max:10000'
 
         ]);
         $post = new Post();
@@ -53,11 +54,12 @@ class PostController extends Controller
 
     public function getDeletePost($post_id)
     {
-        $post = Post::find($post_id)->first();
-        if (Auth::user() != $post->user) {
+        $post = Post::find($post_id);
+
+
+        if (Auth::user() -> id != $post->user->id) {
             return redirect()->back();
         }
-
         $post->delete();
         return redirect()->route('dashboard')->with(['message' => 'Successfully Deleted']);
     }
@@ -66,7 +68,6 @@ class PostController extends Controller
     {
         $this->validate($request, [
             'body' => 'required'
-
         ]);
         $post = Post::find($request['postId']);
         if (Auth::user() != $post->user) {
@@ -80,6 +81,7 @@ class PostController extends Controller
 
     public function postLikePost(Request $request)
     {
+
         $post_id = $request['postId'];
         $is_like = $request['isLike'] === 'true';
         $update = false;
@@ -105,7 +107,7 @@ class PostController extends Controller
         $like->post_id = $post->id;
         if ($update) {
             $like->update();
-        }else{
+        } else {
             $like->save();
         }
         return null;
