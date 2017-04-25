@@ -17,7 +17,7 @@
                 <h3>{{$user->first_name}}</h3>
                 @if(Auth::user()->id != $user->id)
 
-                @if(\App\Friend::where('id_sender', Auth::user()->id)->where('id_getter',$user->id)->first())
+                @if(\App\Friend::where('id_sender',$user->id)->Orwhere('id_getter',$user->id)->first())
                     <a href="{{route('add.friend', ['id'=>$user->id])}}" role="button" class="btn btn-success">
                         Удалить из друзй
                     </a>
@@ -75,6 +75,7 @@
                 <a href="{{route('page',['id'=>$user->id])}}">{{$user->first_name}}</a>
 
                 <span class="likes_number"> {{$post->likes}} </span>  <i class="fa fa-heart" aria-hidden="true"></i>
+
                 <span class="likes_number">{{$post->dislikes}}  </span>     <i class="fa fa-thumbs-down"
                                                                                aria-hidden="true"></i>
                 <article class="post" data-postid="{{ $post->id }}">
@@ -86,27 +87,57 @@
                     </div>
                     <hr>
                     <div class="interaction">
-                        <button><a href="#"
-                                   class="like">{{ $user->likes() -> where('post_id',$post->id)->first() ? $user->likes() -> where('post_id',$post->id)->first()->like == 1 ? 'You liked it' : 'Like' : 'Like'}}</a>
-                        </button>
-                        <button><a href="#"
-                                   class="like">{{ $user->likes() -> where('post_id',$post->id)->first() ? $user->likes() -> where('post_id',$post->id)->first()->like == 0 ? 'You don\'t like it' : 'Dislike' : 'Dislike'}}</a>
-                        </button>
+                        <a href="#"
+                                    class="like">{{ Auth::user()->likes()->where('post_id', $post->id)->first() ? Auth::user()->likes()->where('post_id', $post->id)->first()->like == 1 ? 'You like this post' : 'Like' : 'Like'}}</a>
 
 
-                        <button><a href="#" class="edit">Edit</a></button>
+                        <a href="#"
+                                    class="like">{{  Auth::user()->likes()->where('post_id', $post->id)->first() ? Auth::user()->likes()->where('post_id', $post->id)->first()->like == 0 ? 'You don\'t like this post' : 'Dislike' : 'Dislike' }}</a>
 
-                        <button>
+                        @if(Auth::user()->id == $post->user_id)
+
+                        <a href="#" class="edit">Edit</a>
+
                             <a href="{{ route('post.delete', ['post_id' =>                                     $post->id])}}">Delete</a>
-                        </button>
 
+                          @endif
 
                     </div>
                 </article>
             @endforeach()
 
+                <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Edit Post</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="post-body">Edit the post</label>
+                                        <textarea name="post-body" id="post-body" rows="5" class="form-control"></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="modal-save">Save changes</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
         </div>
     </div>
 
+    <script>
 
+        var token = '{{ Session::token() }}';
+        var urlEdit = '{{ route('edit') }}';
+        var urlLike = '{{ route('like') }}';
+
+    </script>
 @endsection
