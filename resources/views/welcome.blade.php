@@ -19,10 +19,14 @@
         <section class="inputs">
             <div class="row">
                 <div class="col-md-4 panell">
-                    <div class="colorful friends"><img src="{{ asset('images/friends.jpg') }}" alt=""></div><p>Общайтесь с друзьями!!</p>
-                    <div class="colorful posts"><img src="{{ asset('images/posts.png') }}" alt=""> </div> <p>Публикуйте посты!</p>
-                    <div class="colorful likes"><img src="{{ asset('images/likes.jpg') }}" alt=""></div><p>Ставьте лайки или дизлайки :)</p>
-                </div><i class="fa fa-address-book" aria-hidden="true"></i>
+                    <div class="colorful friends"><img src="{{ asset('images/friends.jpg') }}" alt=""></div>
+                    <p>Общайтесь с друзьями!!</p>
+                    <div class="colorful posts"><img src="{{ asset('images/posts.png') }}" alt=""></div>
+                    <p>Публикуйте посты!</p>
+                    <div class="colorful likes"><img src="{{ asset('images/likes.jpg') }}" alt=""></div>
+                    <p>Ставьте лайки или дизлайки :)</p>
+                </div>
+                <i class="fa fa-address-book" aria-hidden="true"></i>
                 <div class="col-md-4 col-md-offset-3">
                     <div class="block">
                         <h3>Регистрация:</h3>
@@ -60,7 +64,8 @@
                                 <input type="password" name="password" id="password"
                                        value="{{ Request:: old('password') }}">
                             </div>
-                            <button type="submit" class="btn btn-success">Войти <i class="fa fa-sign-in" aria-hidden="true"></i>     </button>
+                            <button type="submit" class="btn btn-success">Войти <i class="fa fa-sign-in"
+                                                                                   aria-hidden="true"></i></button>
                             <input type="hidden" name="_token" value="{{ Session::token() }}">
                         </form>
                     </div>

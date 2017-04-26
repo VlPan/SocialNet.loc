@@ -1,20 +1,28 @@
-.new-post{
+.new-post {
     padding: 16px 0;
     border-bottom: 1px solid #ccc;
 }
 
 .new-post header,
-.post header{
+.post header {
     margin-bottom: 20px;
 }
 
-.post.post{
+.post.post {
     padding-left: 10px;
     border-left: 3px solid darkred;
     margin-bottom: 30px;
 }
 
-.post.post .info{
+.post.post .info {
     color: #aaa;
     font-style: italic;
+}
+
+.fa-envelope{
+    color:#507299;
+}
+
+.fa-cog{
+    color:#1d9d74;
 }

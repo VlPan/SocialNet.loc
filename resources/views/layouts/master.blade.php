@@ -17,7 +17,7 @@
 <body>
 
 @if(Auth::user() == true)
-@include('includes.header')
+    @include('includes.header')
 @endif
 
 <div class="container">

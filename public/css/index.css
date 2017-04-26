@@ -29,7 +29,6 @@ p.title {
     padding: 40px;
     border: 2px solid #e3e4e8;
 
-
 }
 
 .panell {
@@ -37,26 +36,26 @@ p.title {
 
 }
 
-.colorful  {
+.colorful {
     height: 200px;
     border-bottom: 1px solid;
     font-size: 20px;
     font-weight: 700;
     width: 450px;
-    margin-top:2px;
+    margin-top: 2px;
     border-bottom: 2px solid #000000;
 }
 
-.colorful + p{
+.colorful + p {
     font-size: 20px;
 }
 
 .colorful:hover {
-   cursor: pointer;
+    cursor: pointer;
 }
 
 .colorful img {
-    width:inherit;
+    width: inherit;
     height: inherit;
 
 }
@@ -66,9 +65,10 @@ footer {
     border-top: 2px solid #e3e4e8;
 }
 
-.fa-address-book{
+.fa-address-book {
     font-size: 25px;
 }
+
 
 
 

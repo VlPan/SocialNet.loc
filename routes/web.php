@@ -55,8 +55,8 @@ Route::group(['middleware' => ['web']], function () {
         'as' => 'edit'
     ]);
 
-    Route::get('/account',[
-       'uses' => 'UserController@getAccount',
+    Route::get('/account', [
+        'uses' => 'UserController@getAccount',
         'as' => 'account'
     ]);
 
@@ -75,6 +75,43 @@ Route::group(['middleware' => ['web']], function () {
         'uses' => 'PostController@postLikePost',
         'as' => 'like'
     ]);
+
+    Route::get('/mypage/{id}', [
+        'uses' => 'UserController@getPage',
+        'as' => 'page',
+        'middleware' => 'auth'  //Only accessable when we logged in!!!
+    ]);
+
+    Route::get('/add_friend/{id}', [
+        'uses' => 'UserController@addFriend',
+        'as' => 'add.friend',
+        'middleware' => 'auth'  //Only accessable when we logged in!!!
+    ]);
+
+    Route::get('/make_message/{id}', [
+        'uses' => 'MessageController@makeMessage',
+        'as' => 'make.message',
+        'middleware' => 'auth'  //Only accessable when we logged in!!!
+    ]);
+
+    Route::post('/get_message/{id}', [
+        'uses' => 'MessageController@getMessage',
+        'as' => 'get.message',
+        'middleware' => 'auth'  //Only accessable when we logged in!!!
+    ]);
+
+    Route::get('/get_panel_message', [
+        'uses' => 'MessageController@getPanel',
+        'as' => 'get.panel',
+        'middleware' => 'auth'  //Only accessable when we logged in!!!
+    ]);
+
+    Route::get('/deltemessage/{id}', [
+        'uses' => 'MessageController@deleteMessage',
+        'as' => 'delete.message',
+        'middleware' => 'auth'  //Only accessable when we logged in!!!
+    ]);
+
 
 
 });

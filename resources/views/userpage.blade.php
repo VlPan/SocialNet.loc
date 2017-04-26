@@ -14,18 +14,25 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-1">
-                <h3>{{$user->first_name}}</h3>
+                <h3>{{$user->first_name}} {{$user->second_name}}</h3>
+                <em> {{$user->country}}   {{$user->city}}</em>
+                <p>{{$user->status}}</p>
+
                 @if(Auth::user()->id != $user->id)
 
-                @if(\App\Friend::where('id_sender',$user->id)->Orwhere('id_getter',$user->id)->first())
-                    <a href="{{route('add.friend', ['id'=>$user->id])}}" role="button" class="btn btn-success">
-                        Удалить из друзй
+                    <a href="{{route('make.message',['id'=>$user->id])}}" role="button" class="btn btn-primary" style="margin-bottom: 7px;">
+                        Написать сообщение
                     </a>
-                @else
-                    <a href="{{route('add.friend', ['id'=>$user->id])}}" role="button" class="btn btn-success">
-                        Добавить в друзья
-                    </a>
-                @endif
+
+                    @if(\App\Friend::where('id_sender',Auth::user()->id)->where('id_getter',$user->id)->first() || \App\Friend::where('id_getter',Auth::user()->id)->where('id_sender',$user->id)->first())
+                        <a href="{{route('add.friend', ['id'=>$user->id])}}" role="button" class="btn btn-success">
+                            Удалить из друзй
+                        </a>
+                    @else
+                        <a href="{{route('add.friend', ['id'=>$user->id])}}" role="button" class="btn btn-success">
+                            Добавить в друзья
+                        </a>
+                    @endif
                 @endif
 
 
@@ -34,36 +41,38 @@
                     <img src="{{ route('account.image', ['filename' => $user->first_name . '-' . $user->id . '.jpg']) }}"
                          alt="" class="img-responsive">
                 </div>
-                <h2>Количество постов: {{$posts_count}}</h2>
+                <h3>Количество постов: {{$posts_count}}</h3>
 
             </div>
 
 
-
-            <div class="col-md-4 col-md-offset-1">
+            <div class="col-md-5 col-md-offset-1">
                 <h2>Список Друзей:</h2>
                 <hr>
 
                 @foreach($friends as $friend)
-                    {{--{{dump($friend)}}--}}
-                    {{--{{dump($user->id)}}--}}
-                @if($friend->id_sender != $user->id)
 
-                    <h3>Имя:
-                        <a href="{{route('page',['id'=>$user->where('id',$friend->id_sender)->first()                                        ->id])}}">{{$user->where('id',$friend->id_sender)->first()                                        ->first_name}}</a>
-                    </h3>
-                    <div class="friends-image">
-                        <img src="{{ route('account.image', ['filename' => $user->where('id',$friend->id_sender)->first()                                        ->first_name . '-' . $user->where('id',$friend->id_sender)->first()                                        ->id . '.jpg']) }}"
-                             alt="" class="img-responsive">
-                    </div>
+                    @if($friend->id_sender != $user->id)
+
+                        <section style="display:inline-block;">
+                        <h3 style="margin-right: 10px;">Имя:
+                            <a href="{{route('page',['id'=>$user->where('id',$friend->id_sender)->first()                                        ->id])}}">{{$user->where('id',$friend->id_sender)->first()                                        ->first_name}} {{$user->where('id',$friend->id_sender)->first()                                        ->second_name}}</a>
+                        </h3>
+                        <div class="friends-image">
+                            <img src="{{ route('account.image', ['filename' => $user->where('id',$friend->id_sender)->first()                                        ->first_name . '-' . $user->where('id',$friend->id_sender)->first()                                        ->id . '.jpg']) }}"
+                                 alt="" class="img-responsive">
+                        </div>
+                        </section>
                     @else
-                        <h3>Имя:
+                        <section style="display:inline-block;">
+                        <h3 style="margin-right: 10px;">Имя:
                             <a href="{{route('page',['id'=>$user->where('id',$friend->id_getter)->first()                                        ->id])}}">{{$user->where('id',$friend->id_getter)->first()                                        ->first_name}}</a>
                         </h3>
                         <div class="friends-image">
                             <img src="{{ route('account.image', ['filename' => $user->where('id',$friend->id_getter)->first()                                        ->first_name . '-' . $user->where('id',$friend->id_getter)->first()                                        ->id . '.jpg']) }}"
                                  alt="" class="img-responsive">
                         </div>
+                        </section>
                     @endif
                 @endforeach
             </div>
@@ -88,47 +97,47 @@
                     <hr>
                     <div class="interaction">
                         <a href="#"
-                                    class="like">{{ Auth::user()->likes()->where('post_id', $post->id)->first() ? Auth::user()->likes()->where('post_id', $post->id)->first()->like == 1 ? 'You like this post' : 'Like' : 'Like'}}</a>
+                           class="like">{{ Auth::user()->likes()->where('post_id', $post->id)->first() ? Auth::user()->likes()->where('post_id', $post->id)->first()->like == 1 ? 'You like this post' : 'Like' : 'Like'}}</a>
 
 
                         <a href="#"
-                                    class="like">{{  Auth::user()->likes()->where('post_id', $post->id)->first() ? Auth::user()->likes()->where('post_id', $post->id)->first()->like == 0 ? 'You don\'t like this post' : 'Dislike' : 'Dislike' }}</a>
+                           class="like">{{  Auth::user()->likes()->where('post_id', $post->id)->first() ? Auth::user()->likes()->where('post_id', $post->id)->first()->like == 0 ? 'You don\'t like this post' : 'Dislike' : 'Dislike' }}</a>
 
                         @if(Auth::user()->id == $post->user_id)
 
-                        <a href="#" class="edit">Edit</a>
+                            <a href="#" class="edit">Edit</a>
 
                             <a href="{{ route('post.delete', ['post_id' =>                                     $post->id])}}">Delete</a>
 
-                          @endif
+                        @endif
 
                     </div>
                 </article>
             @endforeach()
 
-                <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title">Edit Post</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="post-body">Edit the post</label>
-                                        <textarea name="post-body" id="post-body" rows="5" class="form-control"></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="modal-save">Save changes</button>
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Edit Post</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="post-body">Edit the post</label>
+                                    <textarea name="post-body" id="post-body" rows="5" class="form-control"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-save">Save changes</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
 
         </div>
     </div>

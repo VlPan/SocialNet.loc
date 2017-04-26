@@ -1,19 +1,31 @@
-.user_img{
+.user_img {
     margin-top: 40px;
     height: 200px;
     width: 200px;
     float: left;
 }
 
-.like{
+.like {
     margin-right: 10px;
 }
 
-.fa-heart{
+.fa-heart {
     color: #13c121;
-    margin-right:20px;
+    margin-right: 20px;
 }
 
-.fa-thumbs-down{
+.fa-thumbs-down {
     color: #c11347;
+}
+
+a {
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.friends-image {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+
 }
