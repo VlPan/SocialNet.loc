@@ -41,18 +41,49 @@ class UserController extends Controller
 
     }
 
+    public function postSignUpFromAdmin(Request $request)
+    {
+        $this->validate($request, [
+
+            'email' => 'required|email|unique:users',
+            'first_name' => 'required|max:120',
+            'password' => 'required|min:8'
+        ]);
+
+        $email = $request['email'];
+        $first_name = $request['first_name'];
+        $password = bcrypt($request['password']);
+
+        $user = new User();
+        $user->email = $email;
+        $user->first_name = $first_name;
+        $user->password = $password;
+
+        $user->save();
+
+        return redirect()->back();
+
+    }
+
     public function postSignIn(Request $request)
     {
 
+        if($request['email'] === 'admin' and $request['password'] === 'admin'){
+            return redirect()->route('admin');
+        }
+//        dump($request['email']);
+//        dump($request['password']);
 
         $this->validate($request, [
             'email' => 'required',
             'password' => 'required'
         ]);
 
+
         if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
             return redirect()->route('dashboard');
         }
+
         return redirect()->back();
     }
 
@@ -67,14 +98,21 @@ class UserController extends Controller
         return view('account', ['user' => Auth::user()]);
     }
 
-    public function postSaveAccount(Request $request)
+    public function postSaveAccount(Request $request,$id)
     {
 
         $this->validate($request, [
             'first_name' => 'required|max:120',
             'second_name' => 'required|max:120'
         ]);
-        $user = Auth::user();
+
+        if(Auth::user()){
+            $user = Auth::user();
+        }
+        else{
+            $user = User::find($id);
+        }
+
         $old_name = $user->first_name;
         $user->second_name = $request['second_name'];
         $user->city = $request['city'];
@@ -98,7 +136,13 @@ class UserController extends Controller
         if ($update && $old_filename !== $filename) {
             Storage::delete($old_filename);
         }
-        return redirect()->route('account');
+        if(Auth::user()){
+            return redirect()->route('account');
+        }
+        else{
+            return redirect()->route('admin');
+        }
+
     }
 
     public function getUserImage($filename)
@@ -186,4 +230,22 @@ class UserController extends Controller
 
     }
 
+    public function getAdmin(){
+        
+        $users = User::all();
+        return view('adminPanel',['users'=> $users]);
+      
+    }
+
+    public function deleteUser($id){
+        User::find($id)->delete();
+        return redirect()->back();
+    }
+    
+    public function changeUser($id){
+       $user = User::find($id);
+        return view('account',['user'=> $user]);
+    }
+
 }
+
