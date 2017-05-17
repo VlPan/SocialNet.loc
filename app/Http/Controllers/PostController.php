@@ -15,7 +15,7 @@ class PostController extends Controller
     public function getDashboard()
     {
         $posts = Post::orderBy('created_at', 'desc')->get();
-        $user = Auth::user();
+        $user = Auth::user(); //current user
         $users = User::all();
         $likes = 0;
         $dislikes = 0;
@@ -28,8 +28,8 @@ class PostController extends Controller
             }
             $post->likes = $likes;
             $post->dislikes = $dislikes;
-            $likes = 0;
-            $dislikes = 0;
+//            $likes = 0;
+//            $dislikes = 0;
         }
 
         return view('dashboard', ['posts' => $posts, 'user' => $user, 'users' => $users, 'likes' => $likes, 'dislikes' => $dislikes, 'isLike' => $isLike, 'isDislike' => $isDislike]);
@@ -38,15 +38,14 @@ class PostController extends Controller
 
     public function postCreatePost(Request $request)
     {
-        //TO-DO: Validation
         $this->validate($request, [
             'body' => 'required|max:10000'
-
         ]);
+        
         $post = new Post();
         $post->body = $request['body'];
         $message = 'There was an error';
-        if ($request->user()->posts()->save($post)) {
+        if ($request->user()->posts()->save($post)) { //Dependency Injection!!!
             $message = 'Post successfully created!';
         }
         return redirect()->route('dashboard')->with(['message' => $message]);
@@ -55,9 +54,7 @@ class PostController extends Controller
     public function getDeletePost($post_id)
     {
         $post = Post::find($post_id);
-
-
-        if (Auth::user() -> id != $post->user->id) {
+        if (Auth::user()->id != $post->user->id) {
             return redirect()->back();
         }
         $post->delete();
@@ -76,12 +73,10 @@ class PostController extends Controller
         $post->body = $request['body'];
         $post->update();
         return response()->json(['new_body' => $post->body], 200);
-
     }
 
     public function postLikePost(Request $request)
     {
-
         $post_id = $request['postId'];
         $is_like = $request['isLike'] === 'true';
         $update = false;
@@ -92,13 +87,12 @@ class PostController extends Controller
         $user = Auth::user();
         $like = $user->likes()->where('post_id', $post_id)->first();
         if ($like) {
-            $already_like = $like->like;
+            $already_liked = $like->like;
             $update = true;
-            if ($already_like == $is_like) {
+            if ($already_liked == $is_like) {
                 $like->delete();
                 return null;
             }
-
         } else {
             $like = new Like();
         }
